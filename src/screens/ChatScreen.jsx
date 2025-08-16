@@ -10,6 +10,9 @@ import {
 } from '../utils/chatStorage'
 import { getCodeLanguage } from '../utils/syntaxHighlight'
 import { CODE_RESPONSES, DEFAULT_RESPONSE } from '../utils/chatResponses'
+
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'prismjs/components/prism-markup'
@@ -63,7 +66,7 @@ const ChatScreen = () => {
     }
   }, [messages, currentChatId, chatId])
 
-  // Enhanced code detection and response generation
+  // Simplified response generation
   const getBotResponse = (userMessage) => {
     const lowerMessage = userMessage.toLowerCase()
     
@@ -71,17 +74,32 @@ const ChatScreen = () => {
     const codeKeywords = ['code', 'html', 'css', 'javascript', 'js', 'website', 'page', 'landing', 'build', 'create', 'make']
     const isCodeRequest = codeKeywords.some(keyword => lowerMessage.includes(keyword))
     
+    let response
+    
     if (isCodeRequest) {
       if (lowerMessage.includes('landing') || lowerMessage.includes('website') || lowerMessage.includes('page')) {
-        return CODE_RESPONSES.landing
+        response = CODE_RESPONSES.landing
       } else if (lowerMessage.includes('css') || lowerMessage.includes('style')) {
-        return CODE_RESPONSES.css
+        response = CODE_RESPONSES.css
       } else {
-        return CODE_RESPONSES.default
+        response = CODE_RESPONSES.default
       }
+    } else {
+      response = DEFAULT_RESPONSE
     }
     
-    return DEFAULT_RESPONSE
+    // Return formatted message object
+    return {
+      id: Date.now(),
+      text: response.text,
+      sender: 'bot',
+      timestamp: new Date(),
+      code: response.code,
+      language: response.language || (response.code ? getCodeLanguage(response.code) : null),
+      type: response.type || 'markdown',
+      metadata: response.metadata || {},
+      suggestions: response.suggestions || []
+    }
   }
 
   const handleSendMessage = async () => {
@@ -101,14 +119,7 @@ const ChatScreen = () => {
     // Simulate typing delay
     setTimeout(() => {
       const botResponse = getBotResponse(inputValue)
-      const botMessage = {
-        id: Date.now() + 1,
-        text: botResponse.text,
-        sender: 'bot',
-        timestamp: new Date(),
-        code: botResponse.code
-      }
-      setMessages(prev => [...prev, botMessage])
+      setMessages(prev => [...prev, botResponse])
       setIsTyping(false)
     }, 1500)
   }
@@ -153,7 +164,39 @@ const ChatScreen = () => {
               </div>
             )}
             <div className="message-content">
-              <div className="message-text">{message.text}</div>
+              <div className="message-text">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    // Custom styling for markdown elements
+                    p: ({children}) => <p style={{margin: '0 0 8px 0'}}>{children}</p>,
+                    h1: ({children}) => <h1 style={{fontSize: '1.5rem', fontWeight: 'bold', margin: '0 0 8px 0'}}>{children}</h1>,
+                    h2: ({children}) => <h2 style={{fontSize: '1.3rem', fontWeight: 'bold', margin: '0 0 8px 0'}}>{children}</h2>,
+                    h3: ({children}) => <h3 style={{fontSize: '1.1rem', fontWeight: 'bold', margin: '0 0 8px 0'}}>{children}</h3>,
+                    ul: ({children}) => <ul style={{margin: '8px 0', paddingLeft: '20px'}}>{children}</ul>,
+                    ol: ({children}) => <ol style={{margin: '8px 0', paddingLeft: '20px'}}>{children}</ol>,
+                    li: ({children}) => <li style={{margin: '4px 0'}}>{children}</li>,
+                    strong: ({children}) => <strong style={{fontWeight: 'bold'}}>{children}</strong>,
+                    em: ({children}) => <em style={{fontStyle: 'italic'}}>{children}</em>,
+                    code: ({children, className}) => {
+                      // Inline code styling
+                      if (!className) {
+                        return <code style={{
+                          backgroundColor: '#f1f5f9',
+                          padding: '2px 4px',
+                          borderRadius: '4px',
+                          fontSize: '0.9em',
+                          fontFamily: 'monospace'
+                        }}>{children}</code>
+                      }
+                      return <code>{children}</code>
+                    },
+                    pre: ({children}) => <pre>{children}</pre>
+                  }}
+                >
+                  {message.text}
+                </ReactMarkdown>
+              </div>
               {message.code && (
                 <div className="code-block">
                   <div className="code-header">

@@ -205,7 +205,19 @@ export const CODE_RESPONSES = {
         </div>
     </section>
 </body>
-</html>`
+</html>`,
+    type: 'code',
+    language: 'html',
+    metadata: {
+      category: 'web-development',
+      difficulty: 'beginner',
+      tags: ['html', 'css', 'landing-page', 'responsive']
+    },
+    suggestions: [
+      'Try adding more interactive elements',
+      'Consider adding a contact form',
+      'Experiment with different color schemes'
+    ]
   },
   css: {
     text: "Here's a collection of modern CSS styles and animations:",
@@ -356,9 +368,21 @@ body {
         border-color: #4b5563;
         color: #f9fafb;
     }
-}`
+}`,
+    type: 'code',
+    language: 'css',
+    metadata: {
+      category: 'styling',
+      difficulty: 'intermediate',
+      tags: ['css', 'animations', 'responsive', 'modern']
+    },
+    suggestions: [
+      'Try adding more complex animations',
+      'Experiment with CSS Grid layouts',
+      'Consider adding CSS custom properties'
+    ]
   },
-  default: {
+    default: {
     text: "Here's a simple HTML structure with modern styling:",
     code: `<!DOCTYPE html>
 <html lang="en">
@@ -443,10 +467,33 @@ body {
         <a href="#" class="btn">Get Started</a>
     </div>
 </body>
-</html>`
+</html>`,
+    type: 'code',
+    language: 'html',
+    metadata: {
+      category: 'web-development',
+      difficulty: 'beginner',
+      tags: ['html', 'css', 'responsive', 'modern']
+    },
+    suggestions: [
+      'Try adding more content sections',
+      'Experiment with different color schemes',
+      'Consider adding JavaScript interactions'
+    ]
   }
 }
 
 export const DEFAULT_RESPONSE = {
-  text: "I'm here to help you with your learning journey! Feel free to ask me anything about coding, design, or any educational topic. I can help you build websites, explain concepts, or provide code examples. Just ask me about HTML, CSS, JavaScript, or any web development topic!"
+  text: "# Welcome to Chatterbox AI! 🤖\n\nI'm here to help you with your **learning journey**! Feel free to ask me anything about coding, design, or any educational topic.\n\n## What I can help you with:\n\n- **Web Development**: HTML, CSS, JavaScript, React\n- **Code Examples**: Complete, working code snippets\n- **Learning Concepts**: Explanations with examples\n- **Project Guidance**: Step-by-step tutorials\n\n## Quick Start\n\nTry asking me about:\n- Creating a **landing page**\n- **CSS animations** and styles\n- **JavaScript functionality**\n- Any programming concept\n\nI'll provide you with detailed explanations, code examples, and helpful suggestions!",
+  type: 'markdown',
+  metadata: {
+    category: 'general',
+    difficulty: 'beginner',
+    tags: ['introduction', 'help', 'guidance']
+  },
+  suggestions: [
+    'Ask me to create a landing page',
+    'Request CSS animations and styles',
+    'Get help with JavaScript functionality'
+  ]
 }

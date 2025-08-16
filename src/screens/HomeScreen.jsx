@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Zap, User, Leaf, Grid, Clock, MessageSquare, Trash2 } from 'lucide-react'
-import { getRecentChats, initializeSampleData, generateChatId, saveChat, getChats, clearAllData } from '../utils/chatStorage'
+import { initializeSampleData, generateChatId, saveChat, getChats, clearAllData } from '../utils/chatStorage'
 import './css/HomeScreen.css'
 
 // Constants
@@ -36,18 +36,15 @@ const createAndNavigateToChat = (title, response, navigate) => {
 
 const HomeScreen = () => {
   const navigate = useNavigate()
-  const [recentChats, setRecentChats] = useState([])
   const [allChats, setAllChats] = useState([])
 
   useEffect(() => {
     initializeSampleData()
     
     const loadChats = () => {
-      const recent = getRecentChats()
       const all = Object.values(getChats())
       const sortedAllChats = all.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
       
-      setRecentChats(recent)
       setAllChats(sortedAllChats)
     }
     
@@ -63,7 +60,6 @@ const HomeScreen = () => {
     if (window.confirm('Are you sure you want to clear all chat history? This action cannot be undone.')) {
       clearAllData()
       setAllChats([])
-      setRecentChats([])
     }
   }
 
@@ -75,7 +71,7 @@ const HomeScreen = () => {
       id: 1,
       title: "What is photosynthesis?",
       description: "Photosynthesis is the process by which plants convert light energy into chemical energy...",
-      response: "Photosynthesis is the process by which plants, algae, and some bacteria convert light energy into chemical energy. During this process, carbon dioxide and water are converted into glucose and oxygen using sunlight as the energy source. This process occurs in the chloroplasts of plant cells, specifically in the thylakoid membranes where chlorophyll captures light energy. The overall equation is: 6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂. This process is crucial for life on Earth as it produces oxygen and provides the foundation for most food chains.",
+      response: "# What is Photosynthesis? 🌱\n\n**Photosynthesis** is the process by which plants, algae, and some bacteria convert light energy into chemical energy.\n\n## How it Works\n\nDuring this process:\n- **Carbon dioxide** and **water** are converted into glucose and oxygen\n- **Sunlight** provides the energy source\n- This occurs in the **chloroplasts** of plant cells\n- Specifically in the **thylakoid membranes** where chlorophyll captures light energy\n\n## The Equation\n\nThe overall equation is:\n\n**6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂**\n\n## Importance\n\nThis process is crucial for life on Earth because it:\n1. **Produces oxygen** that we breathe\n2. **Provides the foundation** for most food chains\n3. **Converts solar energy** into usable chemical energy\n4. **Removes CO₂** from the atmosphere\n\n## Key Components\n\n- **Chlorophyll**: The green pigment that captures light\n- **Chloroplasts**: The organelles where photosynthesis occurs\n- **Stomata**: Tiny openings that allow gas exchange\n- **Xylem**: Tubes that transport water from roots to leaves",
       icon: <Leaf size={20} />,
       color: "purple"
     },
